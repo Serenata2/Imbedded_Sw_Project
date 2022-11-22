@@ -3,7 +3,7 @@ import numpy as np
 class Froggy:
     def __init__(self, width, height):
         self.state = "up_pressed"
-        self.position = np.array([16, 16])
+        self.position = np.array([int(width/2) - 16, height-32])
         self.life = 5
         self.count = 0
         self.outline = "#FFFFFF"
@@ -13,7 +13,6 @@ class Froggy:
         if command == None:
             self.outline = "#FFFFFF" #검정색상 코드!
             if(self.moving):
-                print("motion!")
                 self.motion()
 
         else:
@@ -69,5 +68,21 @@ class Froggy:
     
     def edgeTest(self):
         a = self.position[0] < 224 and self.position[1] < 208
-        print(a)
         return a
+
+    def condition(self):
+        if(self.moving and self.count == 0):
+            return 2
+        elif(self.moving):
+            return 1
+        else:
+            return 0
+
+    def died(self):
+        self.position = np.array([int(240/2) - 16, 240-32])
+        self.life -= 1
+        self.moving = False
+
+    def succed(self):
+        self.position = np.array([int(240/2) - 16, 240-32])
+        self.moving = False
