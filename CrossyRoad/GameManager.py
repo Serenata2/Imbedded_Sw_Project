@@ -5,15 +5,18 @@ from colorsys import hsv_to_rgb
 from Character import Froggy
 from Joystick import Joystick
 from Car import Car
+from ObjectManager import ObjectManager
 
 class GameManager:
         def __init__(self):
             self.joystick = Joystick()
             self.froggy = Froggy(self.joystick.width, self.joystick.height)
-            self.cars = []
+            self.objectManager = ObjectManager()
             self.command = None
+            self.myImage = Image.open(r"/home/kau-esw/esw/gitHub/ImbeddedSwProject/CrossyRoad/image/New Piskel.png")
             self.flag = 0
             self.successList = [0 for _ in range(3)]
+            self.firstImage = Image.open(r"/home/kau-esw/esw/gitHub/ImbeddedSwProject/CrossyRoad/image/New Piskel.png")
             self.lifeImage = Image.open(r"/home/kau-esw/esw/gitHub/ImbeddedSwProject/CrossyRoad/image/life.png")
             self.froggyImageList = []
             for i in range(1,4):
@@ -46,8 +49,7 @@ class GameManager:
                 self.command = 'right_pressed'
         
             elif not self.joystick.button_A.value: # A pressed
-                car = Car()
-                self.cars.append(car)
+                self.objectManager.updatObjects()
                 self.command = 'up_pressed'
 
             else:
@@ -57,15 +59,10 @@ class GameManager:
             
         def moveObjects(self):
             self.froggy.move(self.command)
-            for car in self.cars:
-                if(car.outOfRange(self.joystick.width)):        # 차가 밖으로 나갔는지 체크
-                    print("out!")
-                    self.cars.remove(car)
-                else:                                           # 아닌 경우 차를 이동시키고, 충돌 체크
-                    car.move()
-                    if(car.collision_check(self.froggy.position)):
-                        self.froggy.died()
-            if(self.froggy.position[1] == 0):
+            self.objectManager.moveObjects()
+            if(self.objectManager.collision_check(self.froggy.position)):
+                self.froggy.died()
+            elif(self.froggy.position[1] == 0):
                 if(self.froggy.position[0] + 8 <= 24):
                     self.successList[0] = True
                     self.froggy.succed()
@@ -75,17 +72,27 @@ class GameManager:
                 elif(self.froggy.position[0] + 8 >= 216):
                     self.successList[2] = True
                     self.froggy.succed()
+                else:
+                    self.froggy.died()
         
 
         def draw(self):
-            myImage = Image.open(r"/home/kau-esw/esw/gitHub/ImbeddedSwProject/CrossyRoad/image/New Piskel.png")
-            myImage.paste(self.backgroundList[int((self.flag) % 8 / 4)]) 
+            self.myImage.paste(self.backgroundList[int((self.flag) % 8 / 4)]) 
             self.flag = (self.flag + 1) % 8
-            for car in self.cars:
-                myImage.paste(self.froggyImageList[0], tuple(car.position), self.froggyImageList[0])
+
+            for car in self.objectManager.cars:
+                self.myImage.paste(self.froggyImageList[0], tuple(car.position), self.froggyImageList[0])
+
             angle = self.froggy.rotateAngle()
             i = self.froggy.condition()
-            myImage.paste(self.froggyImageList[i].rotate(angle), tuple(self.froggy.position), self.froggyImageList[i].rotate(angle))
+            self.myImage.paste(self.froggyImageList[i].rotate(angle), tuple(self.froggy.position), self.froggyImageList[i].rotate(angle))
+            
             for i in range(self.froggy.life):
-                myImage.paste(self.lifeImage, tuple([i * 16, self.joystick.height - 16]), self.lifeImage)
-            self.joystick.disp.image(myImage)
+                self.myImage.paste(self.lifeImage, tuple([i * 16, self.joystick.height - 16]), self.lifeImage)
+            self.joystick.disp.image(self.myImage)
+
+        def drawEnd(self):
+            for i in range(240, -4, -4):
+                self.myImage.paste(self.firstImage, tuple([i, 0]))
+                self.joystick.disp.image(self.myImage)
+

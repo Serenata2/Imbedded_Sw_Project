@@ -1,13 +1,11 @@
 import numpy as np
 
 class Car:
-    def __init__(self):
+    def __init__(self, speed, position):
         self.direction = "up_pressed"
-        self.position = np.array([0, 176])
-        self.width = 16
-        self.count = 0
-        self.outline = "#FFFFFF"
-        self.speed = 5
+        self.position = np.array([position[0], position[1]])
+        self.width = 16     # 나중에 상속
+        self.speed = speed
 
     def move(self):
         self.position[0] += self.speed
@@ -20,7 +18,7 @@ class Car:
         return False
 
     def outOfRange(self, width):
-        if(self.position[0] + self.width < 0 or self.position[0] > width):
+        if(self.position[0] + self.width < 0 or self.position[0] > width+1):
             return True
         return False
     
