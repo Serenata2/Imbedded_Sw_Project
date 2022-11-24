@@ -23,7 +23,6 @@ class Froggy:
                 self.outline = "#FF0000" #빨강색상 코드!
 
     def motion(self):
-        
         if self.state == 'up_pressed':
             if(self.position[1] <= 0):
                 self.moving = False

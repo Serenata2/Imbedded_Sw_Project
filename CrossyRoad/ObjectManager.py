@@ -5,32 +5,41 @@ from colorsys import hsv_to_rgb
 from Character import Froggy
 from Joystick import Joystick
 from Car import Car
+from Road import Road
+from ObjectPool import ObjectPool
 import numpy as np
 
 class ObjectManager:
     def __init__(self):
-        self.cars = []
-        self.logs = []
+        self.obejectPool = ObjectPool()
+        self.roadList = []
+        for i in range(5):
+            print("road is made")
+            self.roadList.append(Road((192 - (16*i)), random.randint(3,10), 4))
 
 
 
     def updatObjects(self):
-        car = Car(-7, [240, 160])
-        self.cars.append(car)
+        for road in self.roadList:
+            if(road.isFit()):   # 만약에 확률을 만족한다면 큐에서 car 객체를 빼고 추가
+                print("car is maded!")
+                road.add(self.obejectPool.post_car())        
 
     # 자동차, 통나무 객체들을 움직이는 함수
     def moveObjects(self):
-        for car in self.cars:
-            if(car.outOfRange(240)):        # 차가 밖으로 나갔는지 체크
-                print("out!")
-                self.cars.remove(car)
-            else:                           # 아닌 경우 차를 이동시킨다
-                car.move()
+        for road in self.roadList:
+            road.moveObject()
+        for road in self.roadList:
+            i = road.outOfRange()
+            if(i != -1):
+                print("return car~")
+                self.obejectPool.return_car(road.returnCar(i))
+
 
 
     # 자동차, 강과 충돌이 일어났는 지 확인하는 함수
     def collision_check(self, froggyPos):
-        for car in self.cars:
-            if(car.collision_check(froggyPos)):
+        for road in self.roadList:
+            if(road.collision_check(froggyPos)):
                 return True
         return False

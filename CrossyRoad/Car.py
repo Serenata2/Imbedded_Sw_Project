@@ -1,12 +1,18 @@
 import numpy as np
 
 class Car:
-    def __init__(self, speed, position):
-        self.direction = "up_pressed"
-        self.position = np.array([position[0], position[1]])
+    def __init__(self):
+        self.position = [0,0]
         self.width = 16     # 나중에 상속
-        self.speed = speed
+        self.speed = 0
 
+    def setCar(self, speed, position):
+        print("car is set!")
+        print("input peed: {}, position: {}".format(speed, position))
+        self.speed = speed
+        self.position = position.copy()
+
+        
     def move(self):
         self.position[0] += self.speed
 

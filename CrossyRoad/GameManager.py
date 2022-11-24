@@ -5,6 +5,7 @@ from colorsys import hsv_to_rgb
 from Character import Froggy
 from Joystick import Joystick
 from Car import Car
+
 from ObjectManager import ObjectManager
 
 class GameManager:
@@ -49,7 +50,6 @@ class GameManager:
                 self.command = 'right_pressed'
         
             elif not self.joystick.button_A.value: # A pressed
-                self.objectManager.updatObjects()
                 self.command = 'up_pressed'
 
             else:
@@ -59,6 +59,7 @@ class GameManager:
             
         def moveObjects(self):
             self.froggy.move(self.command)
+            self.objectManager.updatObjects()
             self.objectManager.moveObjects()
             if(self.objectManager.collision_check(self.froggy.position)):
                 self.froggy.died()
@@ -80,13 +81,14 @@ class GameManager:
             self.myImage.paste(self.backgroundList[int((self.flag) % 8 / 4)]) 
             self.flag = (self.flag + 1) % 8
 
-            for car in self.objectManager.cars:
-                self.myImage.paste(self.froggyImageList[0], tuple(car.position), self.froggyImageList[0])
+            for road in self.objectManager.roadList:
+                for car in road.carList:
+                    self.myImage.paste(self.froggyImageList[0], tuple(car.position), self.froggyImageList[0])
 
             angle = self.froggy.rotateAngle()
             i = self.froggy.condition()
             self.myImage.paste(self.froggyImageList[i].rotate(angle), tuple(self.froggy.position), self.froggyImageList[i].rotate(angle))
-            
+
             for i in range(self.froggy.life):
                 self.myImage.paste(self.lifeImage, tuple([i * 16, self.joystick.height - 16]), self.lifeImage)
             self.joystick.disp.image(self.myImage)
