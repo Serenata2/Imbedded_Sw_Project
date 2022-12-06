@@ -7,8 +7,6 @@ class Car:
         self.speed = 0
 
     def setCar(self, speed, position):
-        print("car is set!")
-        print("input peed: {}, position: {}".format(speed, position))
         self.speed = speed
         self.position = position.copy()
 

@@ -25,6 +25,8 @@ class GameManager:
             self.backgroundList = []
             for i in range(1,3):
                 self.backgroundList.append(Image.open(r"/home/kau-esw/esw/gitHub/ImbeddedSwProject/CrossyRoad/image/background"+str(i)+".png"))
+            self.logImage = Image.open(r"/home/kau-esw/esw/gitHub/ImbeddedSwProject/CrossyRoad/image/log.png")
+            self.counter = 0
             
 
         def endConditionCheck(self):
@@ -59,20 +61,25 @@ class GameManager:
             
         def moveObjects(self):
             self.froggy.move(self.command)
-            self.objectManager.updatObjects()
-            self.objectManager.moveObjects()
+            self.counter = (self.counter % 1000)
+            self.objectManager.updatObjects(self.counter)
+            self.counter += 1
+            self.objectManager.moveObjects(self.froggy)
             if(self.objectManager.collision_check(self.froggy.position)):
                 self.froggy.died()
             elif(self.froggy.position[1] == 0):
                 if(self.froggy.position[0] + 8 <= 24):
                     self.successList[0] = True
                     self.froggy.succed()
+                    self.objectManager.speed_up_objects()
                 elif(108 <= self.froggy.position[0] + 8 <= 132):
                     self.successList[1] = True
                     self.froggy.succed()
+                    self.objectManager.speed_up_objects()
                 elif(self.froggy.position[0] + 8 >= 216):
                     self.successList[2] = True
                     self.froggy.succed()
+                    self.objectManager.speed_up_objects()
                 else:
                     self.froggy.died()
         
@@ -84,6 +91,10 @@ class GameManager:
             for road in self.objectManager.roadList:
                 for car in road.carList:
                     self.myImage.paste(self.froggyImageList[0], tuple(car.position), self.froggyImageList[0])
+            
+            for river in self.objectManager.riverList:
+                for log in river.logList:
+                    self.myImage.paste(self.logImage, tuple(log.position))
 
             angle = self.froggy.rotateAngle()
             i = self.froggy.condition()

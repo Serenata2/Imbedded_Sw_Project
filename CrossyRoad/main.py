@@ -6,12 +6,15 @@ from colorsys import hsv_to_rgb
 from Character import Froggy
 from Joystick import Joystick
 
+# 점수 시스템
+# 고려사항 1. 생명, 2. 시간 3. 들어간 순서
 def main():
     
     gameManager = GameManager()
 
     while True:
         
+        # endConditionCheck
         if(gameManager.endConditionCheck()):
             gameManager.drawEnd()
             print("end!")
