@@ -1,29 +1,28 @@
 from PIL import Image, ImageDraw, ImageFont
-import time
-import random
 from GameManager import GameManager
 from colorsys import hsv_to_rgb
-from Character import Froggy
-from Joystick import Joystick
 
 # 점수 시스템
 # 고려사항 1. 생명, 2. 시간 3. 들어간 순서
 def main():
     
     gameManager = GameManager()
-
+    gameManager.start_draw()        # 시작화면 그리기
+    while True:
+        gameManager.input_data()
+        if gameManager.command == "B_pressed":
+            break
+    
     while True:
         
-        # endConditionCheck
-        if(gameManager.endConditionCheck()):
-            gameManager.drawEnd()
-            print("end!")
-            break
-        gameManager.inputData()
-        gameManager.moveObjects()
-    #그리는 순서가 중요합니다. 배경을 먼저 깔고 위에 그림을 그리고 싶었는데 그림을 그려놓고 배경으로 덮는 결과로 될 수 있습니다.
-    #좌표는 동그라미의 왼쪽 위, 오른쪽 아래 점 (x1, y1, x2, y2)
-        gameManager.draw()
+        # 종료 조건 검사
+        if(gameManager.end_condition_check()):
+            gameManager.last_draw()   # 종료화면 그리기
+            print("end!")   
+            break 
+        gameManager.input_data()     # 조이스틱 입력 받기
+        gameManager.move_objects()   # 조이스틱 입력에 따라 frogger, 다른 객체들 움직이기
+        gameManager.draw()          # 화면 그리기
 
 if __name__ == '__main__':
     main()
