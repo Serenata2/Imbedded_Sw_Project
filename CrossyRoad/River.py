@@ -1,3 +1,5 @@
+from Log import Log
+
 class River:
     def __init__(self, y_position, speed, frequence, kind):
         self.kind = kind

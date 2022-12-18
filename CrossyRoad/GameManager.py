@@ -147,7 +147,7 @@ class GameManager:
             draw = ImageDraw.Draw(image)
             draw.rectangle((0, 0, self.joystick.width, self.joystick.height), outline=0, fill=(0,0,128))
             fnt = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 30)
-            draw.text((40, 150), "Press B \nto Start", font=fnt, fill=(255, 255, 255))
+            draw.text((60, 100), "Press B \nto Start", font=fnt, fill=(255, 255, 255))
             self.joystick.disp.image(image)
 
 
@@ -160,7 +160,7 @@ class GameManager:
                 for car in road.car_list:
                     self.my_image.paste(self.car_image[road.kind], tuple(car.position), self.car_image[road.kind])
             
-            for river in self.object_manager.riverList: # 통나무들 그리기
+            for river in self.object_manager.river_list: # 통나무들 그리기
                 for log in river.log_list:
                     self.my_image.paste(self.log_image[river.kind], tuple(log.position), self.log_image[river.kind])
 
@@ -205,7 +205,11 @@ class GameManager:
             self.score += self.frogger.life * 100
             draw = ImageDraw.Draw(self.my_image)
             fnt = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 25)
-            draw.text((20, 100), "Your score : {}".format(self.score), font=fnt, fill=(255, 255, 255))
+            if self.frogger.life == 0:
+                draw.text((60, 100), "You Lose..", font=fnt, fill=(255, 0, 0))
+            else:
+                draw.text((60, 100), "You Win!!", font=fnt, fill=(255, 255, 0))
+            draw.text((20, 150), "Your score : {}".format(self.score), font=fnt, fill=(255, 255, 255))
             self.joystick.disp.image(self.my_image)     # 최종 점수 그리기
 
         def reset_objects(self):            # frogger가 죽거나 성공해서 다시 돌아올 경우

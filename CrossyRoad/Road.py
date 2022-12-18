@@ -1,3 +1,5 @@
+from Car import Car
+
 class Road:
     def __init__(self, y_position, speed, frequence, kind):
         self.kind = kind

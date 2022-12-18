@@ -1,4 +1,3 @@
-import time
 import random
 from colorsys import hsv_to_rgb
 from Road import Road
@@ -20,9 +19,9 @@ class ObjectManager:
         self.river_list.append(River(16, 2, 70, "long"))
 
 
-    def update_objects(self, counter):
+    def update_objects(self, counter):  # 만약에 주기를 만족한다면 큐에서 Car,Log 객체를 빼고 추가
         for road in self.road_list:
-            if(road.is_fit(counter)):   # 만약에 확률을 만족한다면 큐에서 car 객체를 빼고 추가
+            if(road.is_fit(counter)):   
                 road.add(self.obejectPool.post_car())        
         for river in self.river_list:
             if(river.is_fit(counter)):

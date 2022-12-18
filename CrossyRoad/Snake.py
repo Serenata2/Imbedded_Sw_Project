@@ -1,5 +1,4 @@
 import numpy as np
-from PIL import Image
 
 class Snake:
     def __init__(self, height):

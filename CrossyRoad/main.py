@@ -2,8 +2,6 @@ from PIL import Image, ImageDraw, ImageFont
 from GameManager import GameManager
 from colorsys import hsv_to_rgb
 
-# 점수 시스템
-# 고려사항 1. 생명, 2. 시간 3. 들어간 순서
 def main():
     
     gameManager = GameManager()
